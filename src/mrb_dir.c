@@ -30,16 +30,31 @@ mrb_dir_entries(mrb_state* mrb, mrb_value self)
   } 
   tinydir_close(&dir);
 
-  
-
   return entries;
 }
 
+mrb_value
+mrb_dir_exists(mrb_state* mrb, mrb_value self)
+{
+  mrb_value dirname;
+  mrb_get_args(mrb, "S", &dirname);
+  const char* name = mrb_string_value_ptr(mrb, dirname);
+
+  tinydir_dir dir;
+  if (tinydir_open(&dir, name) == -1) {
+    return mrb_false_value();
+  }
+  tinydir_close(&dir);
+  
+  return mrb_true_value();
+}
 
 void
 mrb_mruby_dir_gem_init(mrb_state* mrb) {
   mrb_dir_class = mrb_define_module(mrb, "Dir");
   mrb_define_module_function(mrb, mrb_dir_class, "entries", mrb_dir_entries, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, mrb_dir_class, "exists?", mrb_dir_exists, MRB_ARGS_REQ(1));
+  mrb_define_module_function(mrb, mrb_dir_class, "exist?", mrb_dir_exists, MRB_ARGS_REQ(1));
 }
 
 void
