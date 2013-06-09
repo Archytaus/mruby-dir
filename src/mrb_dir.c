@@ -17,7 +17,7 @@ mrb_dir_entries(mrb_state* mrb, mrb_value self)
   tinydir_dir dir;  
   if (tinydir_open(&dir, name) == -1)
   {
-    mrb_raisef(mrb, E_RUNTIME_ERROR, "Error opening file: %s", name);
+    mrb_raisef(mrb, E_RUNTIME_ERROR, "Error opening file: %S", mrb_str_new_cstr(mrb, name));
   }
 
   while (dir.has_next) {
@@ -45,7 +45,7 @@ mrb_dir_exists(mrb_state* mrb, mrb_value self)
     return mrb_false_value();
   }
   tinydir_close(&dir);
-  
+
   return mrb_true_value();
 }
 
